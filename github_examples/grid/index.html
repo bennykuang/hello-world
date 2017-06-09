@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Vue.js grid component example</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Delete ".min" for console warnings in development -->
+    <script src="../../script/vue.min.js"></script>
+    </head>
+  <body>
+    <script type="text/x-template" id="grid-template">
+      <table v-if="filteredData.length">
+        <thead>
+          <th v-for="key in columns"
+            v-on:click="sortBy(key)"
+            v-bind:class="{active : sortKey == key}">
+            {{key | capitalize}}
+            <span class="arrow" v-bind:class="sortOrders[key] > 0 ? 'asc' : 'dsc'"></span>
+</span>
+          </th>
+        </thead>
+        <tbody>
+          <tr v-for="entry in filteredData">
+            <td v-for="key in columns">
+              {{entry[key]}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p v-else>No matches found.</p>
+    </script>
+
+    <div id="demo">
+      <form id="search">
+        Search <input name="query" v-model="searchQuery">
+      </form>
+      <demo-grid
+        v-bind:filter-key="searchQuery"
+        v-bind:data="gridData"
+        v-bind:columns="gridColumns">
+      </demo-grid>
+    </div>
+
+    <script src="grid.js"></script>
+
+  </body>
+</html>

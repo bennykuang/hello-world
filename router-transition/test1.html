@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>过渡动效</title>
+<script src="../script/vue.js"></script>
+<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+<style>
+	.act{color:blue;font-weight:bold;}
+	/* .slide-enter-active, .slide-leave-active{
+		transition: opacity .5s;
+	}
+	.slide-enter, .slide-leave-active{
+		opacity: 0;
+	}
+	.fade-enter-active, .fade-leave-active{
+		transition: opacity .5s;
+	}
+	.fade-enter, .fade-leave-active{
+		opacity: 0;
+	} */
+	.slide-right-active, .slide-right-leave-active{
+		transition:opacity .5s;
+	}
+	.slide-right-enter, .slide-right-leave-active{
+		opacity: 0;
+	}
+	.slide-left-active, .slide-left-leave-active{
+		transition:opacity 5s;
+	}
+	.slide-left-enter, .slide-left-leave-active{
+		opacity: 0;
+	}
+</style>
+</head>
+<body>
+	<!-- <h4>单个路由的过渡</h4>
+	<div id="app1">
+		<router-link to="/foo" active-class="act">Go to foo</router-link>&nbsp;
+		<router-link to="/bar" active-class="act">Go to bar</router-link><br><br><br>
+		<router-view></router-view>
+	</div> -->
+
+	<h4>基于路由的动态过渡</h4>
+	<div id="app1">
+		<router-link to="/foo/foo" active-class="act">Go to foo</router-link>&nbsp;
+		<router-link to="/bar" active-class="act">Go to bar</router-link><br><br><br>
+		<transition :name="transitionName">
+			<router-view></router-view>
+		</transition>
+	</div>
+</body>
+<script>
+	const Foo = {template : '<div>This is foo</div>'};
+	const Bar = {template : '<div>This is bar</div>'};
+
+	var router = new VueRouter({
+		routes : [
+			{path : '/foo/:id', component : Foo},
+			{path : '/bar', component : Bar}
+		]
+	});
+
+	new Vue({
+		data : {
+			transitionName : null
+		},
+		router,
+		watch : {
+			'$route' : function(to, from){
+				var toDepth = to.path.split('/').length;
+				var fromDepth = from.path.split('/').length;debugger;
+				this.transitionName = toDepth < fromDepth ? 'slide-right':'slide-left'
+			}
+		}
+	}).$mount('#app1');
+
+</script>
+</html>

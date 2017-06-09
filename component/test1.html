@@ -1,0 +1,161 @@
+<!DOCTYPE>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>组件</title>
+<script src="../script/vue.js"></script>
+</head>
+
+<body>
+<h2>使用组件</h2>
+<h4>注册</h4>
+<div id="app-1">
+	<my-component></my-component>
+</div>
+
+<h4>局部注册</h4>
+<div id="app-2">
+	<my-component></my-component>
+</div>
+
+<h4>data必须是函数</h4>
+<div id="app-3">
+	<simple-counter></simple-counter>
+	<simple-counter></simple-counter>
+	<simple-counter></simple-counter>
+</div>
+
+<h4>使用prop传递数据</h4>
+<div id="app-4">
+	<my-child my-message="hello"></my-child>
+</div>
+
+<h4>动态prop</h4>
+<div id="app-5">
+	<input v-model="parentMsg" /><br />
+	<my-children v-bind:my-message="parentMsg"></my-children>
+</div>
+
+<h4>字面量语法vs动态语法</h4>
+<div id="comp">
+	<comp v-bind:some-prop="1"></comp>
+</div>
+
+<h4>单向数据流</h4>
+<div id="dxsjl">
+	<child initial-counter="HELLO WORLD!"></child>
+</div>
+
+<h4>prop验证</h4>
+<div id="app-6">
+	<input v-model="msg" /><br />
+	<my-component v-bind:my-msg="msg"></my-component>
+</div>
+
+</body>
+<script>
+	Vue.component('my-component', {
+		template : '<div>这是我的第一个vue组件</div>'	
+	});
+	
+	var app1 = new Vue({
+		el : '#app-1'	
+	});
+	
+	var Child = {
+		template : '<div>这是我的第二个vue组件</div>'		
+	};
+	var app2 = new Vue({
+		el : '#app-2',
+		components : {
+			'my-component' : Child	
+		}	
+	});
+	
+	var data = {counter : 0};
+	
+	Vue.component('simple-counter', {
+		template : '<button v-on:click="counter += 1">{{counter}}</button>',
+		data : function(){
+			return {
+				counter : 0
+			};	
+		}	
+	});
+	var app3 = new Vue({
+		el : '#app-3',
+			
+	});
+	
+	Vue.component('my-child', {
+		props : ['myMessage'],
+		template : '<div>{{myMessage}}</div>'	
+	});
+	
+	var app4 = new Vue({
+		el : '#app-4'	
+	});
+	
+	Vue.component('my-children', {
+		props : ['myMessage'],
+		template : '<div>message : {{myMessage}}</div>'	
+	});
+	var app5 = new Vue({
+		el : '#app-5',
+		data : {
+			parentMsg : ''		
+		}
+		
+	});
+	
+	Vue.component('comp', {
+		template : '\
+		<div>{{someProp + 1}}</div>\
+		',
+		props : ['someProp']
+	});
+	var comp = new Vue({
+		el : '#comp',
+	});
+
+	Vue.component('child',{
+		template : '\
+		<div>{{normalizedSize}}</div>\
+		',
+		props : ['initialCounter'],
+		data : function(){
+			return {
+				counter : this.initialCounter + 1
+			}
+		},
+		computed : {
+			normalizedSize : function(){
+				return this.initialCounter.toLowerCase();
+			}
+		}
+	});
+
+	var dxsjl = new Vue({
+		el : '#dxsjl',
+
+	});
+
+	Vue.component('my-component', {
+		props : {
+			myMsg : {
+				type : String,
+				requried : true
+			}
+		},
+		template : '<div>message : {{myMsg +1 }}</div>'	
+	});
+	var app6 = new Vue({
+		el : '#app-6',
+		data : {
+			msg : null		
+		}
+		
+	});
+	
+</script>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>组件</title>
+<script src="../script/vue.js"></script>
+<script src="https://cdn.rawgit.com/chrisvfritz/5f0a639590d6e648933416f90ba7ae4e/raw/98739fb8ac6779cb2da11aaa9ab6032e52f3be00/currency-validator.js"></script>
+</head>
+
+<body>
+<h2>自定义事件</h2>
+
+<h4>使用v-on绑定自定义事件</h4>
+<div id="counter-event-example">
+  <p>{{ total }}</p>
+  <button-counter v-on:increment="incrementTotal"></button-counter>
+  <button-counter></button-counter>
+</div>
+
+<h4>使用自定义事件的表单输入组件</h4>
+<div id="my-component">
+	<my-current-input v-bind:value="price" v-on:input="price=arguments[0]"></my-current-input>
+</div>
+
+
+<h4>货币过滤器</h4>
+	<div id="currency-input">
+		<currency-input label="Price" v-model="price"></currency-input>
+		<currency-input label="Shipping" v-bind:value="shipping" v-on:input="shipping=arguments[0]"></currency-input>
+		<currency-input label="Handling" v-model="handling"></currency-input>
+		<currency-input label="Discount" v-model="discount"></currency-input>
+		<p>Total: ${{total}}</p>
+	</div>
+</body>
+<script>
+
+	Vue.component('button-counter', {
+		template : '\
+		<button v-on:click="increment">{{counter}}</button>\
+		',
+		data : function(){
+			return {
+				counter : 0
+			}
+		},
+		methods : {
+			increment : function(){
+				this.counter += 1;
+				this.$emit('increment');
+			}
+		}
+	});
+
+	new Vue({
+		el : '#counter-event-example',
+		data : {
+			total : 0
+		},
+		methods : {
+			incrementTotal : function(){
+				this.total += 1;
+			}
+		}
+	});
+
+	Vue.component('my-current-input', {
+		template : '\
+			<span>$\
+			<input\
+			ref="input"\
+			v-bind:value="value"\
+			v-on:input="updateValue($event.target.value)">\
+			</span>\
+		',
+		props : ['value'],
+		methods : {
+			updateValue : function(value){
+				var formattedValue = value
+					.trim()
+					.slice(0, value.indexOf('.') + 3);
+				if(formattedValue !== value){
+					this.$refs.input.value= formattedValue;
+				}
+				this.$emit('input', Number(formattedValue));
+			}
+		}
+	});
+
+	var my_component = new Vue({
+		el : '#my-component',
+		data : {
+			price : 0
+		}
+	});
+
+	Vue.component('currency-input', {
+		template : '\
+			<div>\
+				<label v-if="label">{{label}}</label>\
+				$\
+				<input\
+					ref="input"\
+					v-bind:value="value"\
+					v-on:focus="selectAll"\
+					v-on:blur="formatValue"\
+					v-on:input="updateValue($event.target.value)"\
+				>\
+			</div>\
+		',	
+		props : {
+			label : {
+				type : String,
+				default : ''	
+			},
+			value : {
+				type : Number,
+				default : 0	
+			}	
+		},
+		mounted : function(){
+			this.formatValue();	
+		},
+		methods : {
+			updateValue : function(value){
+				var result = currencyValidator.parse(value, this.value)
+				if(result.warning)
+					this.$refs.input.value = result.value;
+					
+				this.$emit('input', result.value);
+			},
+			selectAll : function(event){
+				setTimeout(function(){event.target.select()}, 0);	
+			},
+			formatValue : function(){
+				this.$refs.input.value = currencyValidator.format(this.value);
+			}
+		}
+	});
+	
+	var currency_input = new Vue({
+		el : '#currency-input',
+		data : {
+			price : 0,
+			shipping : 0,
+			handling : 0,
+			discount : 0	
+		},
+		computed : {
+			total : function(){
+				return ( (this.price * 100 + 
+					this.shipping * 100 + 
+					this.handling * 100 -
+					this.discount *100)/100 ).toFixed(2);
+			}	
+		}	
+	});
+</script>
+</html>

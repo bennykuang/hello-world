@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>路由</title>
+<script src="../script/vue.js"></script>
+<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+<style>
+.act{color:red;}
+</style>
+</head>
+<body>
+<h4>重定向</h4>
+<div id="app">
+	<h3>Hello App!</h3>
+	<p>
+		<ul>
+			<li>
+				<router-link to="/relative-redirect" active-class="act">/relative-redirect (redirects to /foo)</router-link>
+			</li>
+			<li>
+				<router-link to="/relative-redirect?foo=bar" active-class="act">/relative-redirect?foo=bar (redirects to /foo?foo=bar)</router-link>
+			</li>
+			<li>
+				<router-link to="/absolute-redirect" active-class="act">/absolute-redirect (redirects to /bar)</router-link>
+			</li>
+			<li>
+				<router-link to="/dynamic-redirect" active-class="act">/dynamic-redirect (redirects to /bar)</router-link>
+			</li>
+			<li>
+				<router-link to="/dynamic-redirect/123" active-class="act">/dynamic-redirect/123 (redirects to /with-params/123)</router-link>
+	        </li>
+	        <li>
+		        <router-link to="/dynamic-redirect?to=foo" active-class="act">/dynamic-redirect?to=foo (redirects to /foo)</router-link>
+	        </li>
+	        <li>
+		        <router-link to="/dynamic-redirect#baz" active-class="act">/dynamic-redirect#baz (redirects to /baz)</router-link>
+	        </li>
+	        <li>
+	        	<router-link to="/named-redirect" active-class="act">/named-redirect (redirects to /baz)</router-link>
+        	</li>
+        	<li>
+        		<router-link to="/redirect-with-params/123" active-class="act">/redirect-with-params/123 (redirects to /with-params/123)</router-link>
+        	</li>
+        	<li>
+	        	<router-link to="/not-found" active-class="act">/not-found (redirects to /)</router-link>
+	        </li>
+		</ul>
+		
+		
+	</p>
+	<router-view></router-view>
+</div>
+</body>
+<script>
+	const Home = {
+		template : '<router-view></router-view>'
+	};
+	const Default = {template : '<div>default</div>'
+	};
+	const Foo = {template : '<div>foo</div>'};
+	const Bar = {template : '<div>bar</div>'};
+	const Baz = {template : '<div>baz</div>'}
+	const Withparams = {template : '<div>id:{{$route.params.id}}</div>'}
+
+	const router = new VueRouter({
+		routes : [
+			{path : '/', component : Home, children : [
+					{path : '', component : Default},
+					{path : 'foo', component : Foo},
+					{path : 'bar', component : Bar},
+					{path : 'baz', name : 'baz', component : Baz},
+					{path : 'with-params/:id', component : Withparams},
+					{path : 'relative-redirect', redirect : 'foo'}
+				]
+			},
+			{path : '/absolute-redirect', redirect : '/bar'},
+			{path : '/dynamic-redirect/:id?', redirect : to => {
+					const {hash, params, query} = to;
+					if(query.to === 'foo'){
+						return {path : '/foo', query : null}
+					}
+					if(hash === '#baz'){
+						return {name : 'baz', hash : ''}
+					}
+					if(params.id){
+						return '/with-params/:id'
+					}
+					else{
+						return '/bar'
+					}
+				}
+			},
+			{path : '/named-redirect', redirect : {name : 'baz'}},
+			{path : '/redirect-with-params/:id', redirect : '/with-params/:id'},
+			{path : '*', redirect : '/'}
+			
+		]
+	});
+
+	new Vue({
+		router
+	}).$mount('#app');
+</script>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>Render函数</title>
+<script src="../script/vue.js"></script>
+<script type="text/x-template" id="anchored-heading-template">
+  <div>
+    <h1 v-if="level === 1">
+      <slot></slot>
+    </h1>
+    <h2 v-if="level === 2">
+      <slot></slot>
+    </h2>
+    <h3 v-if="level === 3">
+      <slot></slot>
+    </h3>
+    <h4 v-if="level === 4">
+      <slot></slot>
+    </h4>
+    <h5 v-if="level === 5">
+      <slot></slot>
+    </h5>
+    <h6 v-if="level === 6">
+      <slot></slot>
+    </h6>
+  </div>
+</script>
+<style>
+.foo{ text-decoration: underline; }
+</style>
+</head>
+<body>
+	<h4>基础</h4>
+	<div id="example-1">
+		<anchored-heading :level="1">Hello world!</anchored-heading>
+	</div>
+	<h4>vm.$slots示例</h4>
+	<div id="example-2">
+		<blog-post>
+		  <h1 slot="header">
+		    About Me
+		  </h1>
+		  <p>Here's some page content, which will be included in vm.$slots.default, because it's not inside a named slot.</p>
+		  <p slot="footer">
+		    Copyright 2016 Evan You
+		  </p>
+		  <p>If I have some content down here, it will also be included in vm.$slots.default.</p>.
+		</blog-post>
+	</div>
+</body>
+<script>
+	/*Vue.component('anchored-heading', {
+		template : '#anchored-heading-template',
+		props : {
+			level : {
+				type : Number,
+				required : true
+			}
+		}
+	});*/
+	
+	Vue.component('anchored-heading', {
+		render: function (createElement) {
+			return createElement(
+			'h' + this.level,   // tag name 标签名称
+			this.$slots.default // 子组件中的阵列
+			)
+		},
+		props: {
+			level: {
+				type: Number,
+				required: true
+			}
+		}
+	});
+
+	new Vue({
+		el : '#example-1',
+		data : {
+
+		}
+	});
+
+	Vue.component('blog-post', {
+		render : function(createElement){
+			var header = this.$slots.header;
+			var body = this.$slots.default;
+			var footer = this.$slots.footer;
+			return createElement('div', [
+					createElement('header',{
+						'class' : {
+							foo : true,
+							bar : false
+						}
+					}, header),
+					createElement('main', {
+						style : {
+							color:'#333',
+						}
+					},body),
+					createElement('footer', {
+							attrs : {
+								id : 'foo',
+								title : 'I am a footer.'
+							}
+					},footer)
+				]);
+		}
+	});
+
+	new Vue({
+		el : '#example-2',
+		data : {
+
+		}
+	});
+</script>
+</html>

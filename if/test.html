@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<script src="../script/vue.js"></script>
+</head>
+
+<body>
+<h1>条件渲染</h1>
+<div id="app-1">
+	<p v-if="ok">Hello Vue!</p>
+	<p v-else>Welcome</p>
+</div>
+
+<h1>&lt;template&gt;中的v-if条件组</h1>
+<div id="app-2">
+	<template v-if="ok">
+		<p>Hello Vue! - 1</p>
+		<p>Hello Vue! - 2</p>
+		<p>Hello Vue! - 3</p>
+	</template>
+</div>
+
+<h1>v-show</h1>
+<div id="app-3">
+	<p v-show="ok">Hello Vue!</p>
+</div>
+</body>
+<script>
+	var app1 = new Vue({
+		el : '#app-1',
+		data : {
+			ok : false	
+		}	
+	});
+	
+	var app2 = new Vue({
+		el : '#app-2',
+		data : {
+			ok : true	
+		}	
+	});
+	
+	var app1 = new Vue({
+		el : '#app-3',
+		data : {
+			ok : true	
+		}	
+	}); 
+</script>
+</html>

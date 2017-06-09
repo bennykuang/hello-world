@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>基本用法</title>
+<script src="../script/vue.js"></script>
+<link rel="stylesheet" type="text/css" href="../css/animate.min.css">
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js"></script> -->
+<style>
+.red{color:red;}
+.blue{color:blue;}
+.my-fade-enter-active, .my-fade-leave-active {
+  transition: all .5s;
+}
+.my-fade-enter, .my-fade-leave-active {
+	transform: translateX(10px);
+	opacity: 0
+}
+.component-fade-enter-active, .component-fade-leave-active {
+  transition: opacity .3s ease;
+}
+.component-fade-enter, .component-fade-leave-active {
+  opacity: 0;
+}
+</style>
+</head>
+
+<body>
+<h4>初始渲染的过渡</h4>
+<div id="demo">
+	<transition appear
+		name="custom-classes-transition"
+	    enter-active-class="animated tada"
+	    leave-active-class="animated bounceOutRight"
+    >
+		<p>Hello Vue!</p>
+	</transition>
+</div>
+
+<!-- <h5>自定义 JavaScript 钩子</h5>
+<div id="example-1">
+	<transition appear
+		v-on:before-appear="customBeforeAppearHook"
+		v-on:appear="customAppearHook"
+		v-on:after-appear="customAfterAppearHook"
+	>	
+	<p>自定义 JavaScript 钩子</p>
+	</transition>
+</div> -->
+
+<h4>多个元素的过渡</h4>
+<div id="example-2">
+	<transition>
+		<button v-bind:key="docState">{{buttonMessage}}</button>
+	</transition>
+</div>
+
+<h4>过渡模式</h4>
+<div id="example-3">
+	<transition name="my-fade" mode="out-in">
+		<button :key="btnKey" @click="btnClick">
+			{{btnKey}}
+		</button>
+	</transition>
+</div>
+
+<h4>多个组件的过渡</h4>
+<div id="example-4">
+	<input type="radio" name="radioBtn" value="v-a" v-model="view"><label>A</label>
+	<input type="radio" name="radioBtn" value="v-b" v-model="view"><label>B</label>
+	<transition name="component-fade" mode="out-in">
+		<component v-bind:is="view"></component>
+	</transition>
+</div>
+
+</body>
+<script>
+	var demo = new Vue({
+		el : '#demo',
+		data : {
+			show : true
+		}
+	});
+
+	/*var example1 = new Vue({
+		el : '#example-1',
+		methods : {
+			customBeforeAppearHook : function(el){
+				el.style.opacity = 0;
+				el.style.transformOrigin = 'left'
+			},
+			customAppearHook : function(el, done){
+				Velocity(el, { opacity: 1, fontSize: '1.4em' }, { duration: 300 })
+			    Velocity(el, { fontSize: '1em' }, { complete: done })
+			},
+			customAfterAppearHook : function(el){
+				Velocity(el, { translateX: '15px', rotateZ: '50deg' }, { duration: 600 })
+				Velocity(el, { rotateZ: '100deg' }, { loop: 2 })
+				Velocity(el, {
+				rotateZ: '45deg',
+				translateY: '30px',
+				translateX: '30px',
+				opacity: 0
+				}, { duration: 600 })
+			}
+		}
+	});*/
+
+	var example2 = new Vue({
+		el : '#example-2',
+		data : {
+			docState : 'saved'
+		},
+		computed : {
+			buttonMessage : function(){
+				switch(this.docState){
+					case 'saved': return 'Edit'
+					case 'edited': return 'Save'
+					case 'editing': return 'Cancel'
+				}
+			}
+		}
+	});
+
+	var example3 = new Vue({
+		el : '#example-3',
+		data : {
+			btnKey : 'on'
+		},
+		methods : {
+			btnClick : function(){
+				this.btnKey = this.btnKey == 'on' ? 'off' : 'on'
+			}
+		}
+
+	});
+
+	var example4 = new Vue({
+		el : '#example-4',
+		data : {
+			view : 'v-a'
+		},
+		methods : {
+			radioClick : function(){
+
+			}
+		},
+		components : {
+			'v-a': {
+		      template: '<div>Component A</div>'
+		    },
+		    'v-b': {
+		      template: '<div>Component B</div>'
+		    }
+		}
+		
+	});
+	
+</script>
+</html>

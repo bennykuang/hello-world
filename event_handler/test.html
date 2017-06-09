@@ -1,0 +1,116 @@
+<!DOCTYPE>
+<html>
+<head>
+<meta charset=utf-8" />
+<title>事件处理器</title>
+<script src="../script/vue.js"></script>
+</head>
+
+<body>
+<h2>监听事件</h2>
+<div id="app-1">
+	<p>这个按钮被点击了{{counter}}次 <button v-on:click="counter += 1">增加1</button></p>
+</div>
+
+<h2>方法事件处理器</h2>
+<div id="app-2">
+	<button v-on:click="greet">greet</button>
+</div>
+
+<h2>内联处理器方法</h2>
+<div id="app-3">
+	<button v-on:click="say('Hi')">say Hi</button>
+	<button v-on:click="say('Hello')">say Hello</button>
+</div>
+
+<p>可以用特殊变量 $event 把它传入方法</p>
+<div id="app-4">
+	<button value="submit" v-on:click="warn('Hello world!', $event)">submit</button>
+</div>
+
+<h2>事件修饰符</h2>
+<div id="app-5">
+	<a v-on:click.stop="doThis">阻止单击事件冒泡</a>
+</div>
+
+<h2>按键修饰符</h2>
+<div id="app-6">
+	<input v-on:keyup.enter="submit1"><br />
+	<input v-on:keyup.space="submit2"><br />
+	<input v-on:keyup.delete="submit3"><br />
+	<input v-on:keyup.esc="submit4"><br />
+	<input v-on:keyup.ctrl="submit5">
+</div>
+
+</body>
+<script>
+	var app1 = new Vue({
+		el : '#app-1',
+		data : {
+			counter : 0	
+		}	
+	});
+	
+	var app2 = new Vue({
+		el : '#app-2',
+		data : {
+			text : 'vue.js'	
+		},
+		methods : {
+			greet : function(event){
+				alert('Hello ' + this.text);
+				alert(event.target.tagName);	
+			}	
+		}
+	});
+	
+	var app3 = new Vue({
+		el : '#app-3',
+		methods : {
+			say : function(str){
+				alert(str)
+			}
+		}
+	});
+	
+	var app4 = new Vue({
+		el : '#app-4',
+		methods : {
+			warn : function(str, event){
+				if(event) event.preventDefault();
+				alert(event.target.value);
+			}	
+		}	
+	});
+	
+	var app5 = new Vue({
+		el : '#app-5',
+		methods : {
+			doThis : function(event){
+				event.stopPropagation()	
+			}	
+		}	
+	});
+	
+	var app6 = new Vue({
+		el : '#app-6',
+		methods : {
+			submit1 : function(){
+				console.log('我按了enter键');	
+			},
+			submit2 : function(){
+				console.log('我按了space键');	
+			},
+			submit3 : function(){
+				console.log('我按了delete键');	
+			},
+			submit4 : function(){
+				console.log('我按了esc键');	
+			},
+			submit5 : function(){
+				console.log('我按了ctrl键');	
+			}
+		}	
+	});
+</script>
+</html>

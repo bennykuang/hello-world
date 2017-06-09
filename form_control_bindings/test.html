@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8" />
+<title>表单控件绑定</title>
+<script src="../script/vue.js"></script>
+</head>
+
+<body>
+<h2>文本</h2>
+<div id="app-1">
+	<p>Message is : {{message}}</p>
+	<input v-model.lazy="message" placeholder="edit me" />
+</div>
+
+<h2>多行文本</h2>
+<div id="app-2">
+	<p>Message is : {{message}}</p>
+	<textarea v-model.trim="message" placeholder="edit me" ></textarea>
+</div>
+
+<h2>复选框</h2>
+<div id="app-3">
+	<input type="checkbox" id="checkBox" v-model="message" v-bind:true-value="t" v-bind:false-value="f"/>
+	<label for="checkBox">{{message}}</label>
+</div>
+
+<p>多个勾选框，绑定到同一个数组</p>
+<div id="app-4">
+	<input type="checkbox" id="jack" value="Jack" v-model="checkedNames">
+	<label for="jack">Jack</label>
+	<input type="checkbox" id="john" value="John" v-model="checkedNames">
+	<label for="john">John</label>
+	<input type="checkbox" id="mike" value="Mike" v-model="checkedNames">
+	<label for="mike">Mike</label>
+	<br>
+	<span>Checked names: {{ checkedNames }}</span>
+</div>
+
+<h2>单选按钮</h2>
+<div id="app-5">
+	<input type="radio" name="radioBt" id="r1" v-bind:value="one" v-model="picked" />
+	<label for="r1">one</label>
+	<input type="radio" name="radioBt" id="r2" v-bind:value="two" v-model="picked" />
+	<label for="r2">two</label>
+	<p>你的选择是：{{picked}}</p>
+</div>
+
+<h1>选择列表</h1>
+<div id="app-6">
+	<select v-model="selected" multiple="multiple" style="width:50px;">
+		<option>a</option>
+		<option>b</option>
+		<option>c</option>
+	</select>
+	<span>selected : {{selected}}</span>
+</div>
+
+<p>动态选项，用 v-for 渲染：</p>
+<div id="app-7">
+	<select v-model="selected">
+		<option v-for="item in items" v-bind:value="item.value">{{item.text}}</option>
+	</select>
+	<span>selected : {{selected}}</span>
+</div>
+</body>
+<script>
+	var app1 = new Vue({
+		el : '#app-1',
+		data : {
+			message : null	
+		}	
+	});
+	
+	var app2 = new Vue({
+		el : '#app-2',
+		data : {
+			message : null	
+		}	
+	});
+	
+	var app3 = new Vue({
+		el : '#app-3',
+		data : {
+			message : '我没被选中',
+			t : '我已被选中',
+			f : '我没被选中'
+		}	
+	});
+	
+	var app4 = new Vue({
+		el : '#app-4',
+		data : {
+			checkedNames : []	
+		}	
+	});
+	
+	var app5 = new Vue({
+		el : '#app-5',
+		data : {
+			picked : null,
+			one : '1',
+			two : '2'	
+		}	
+	});
+	
+	var app6 = new Vue({
+		el : '#app-6',
+		data : {
+			selected : []
+		}	
+	});
+	
+	var app7 = new Vue({
+		el : '#app-7',
+		data : {
+			selected : null,
+			items : [
+				{text : 'a', value : 'a'},
+				{text : 'b', value : 'b'},
+				{text : 'c', value : 'c'}
+			]
+		}	
+	});
+	
+</script>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="../../script/vue.min.js"></script>
+		<script src="https://unpkg.com/jquery"></script>
+	    <script src="https://unpkg.com/select2@4.0.3"></script>
+		<link href="https://unpkg.com/select2@4.0.3/dist/css/select2.min.css" rel="stylesheet">
+		<style>
+	      html, body {
+	        font: 13px/18px sans-serif;
+	      }
+	      select {
+	        min-width: 300px;
+	      }
+		</style>
+
+		<script type="text/x-template" id="demo-template">
+			<div>
+				<p>Select : {{selected}}</p>
+				<select2 v-bind:options="options" v-model="selected">
+					<option disabled value="0">Select one</option>
+				</select2>
+			</div>
+		</script>
+
+		<script type="text/x-template" id="select2-template">
+			<select>
+				<slot></slot>
+			</select>
+		</script>
+
+	</head>
+	<body>
+		<div id="el"></div>
+
+	</body>
+	<script>
+		Vue.component('select2', {
+			template : '#select2-template',
+			props : ['options', 'value'],
+			mounted : function(){
+				var vm = this;
+				$(this.$el)
+					.val(this.value)
+					.select2({data : this.options})
+					.on('change', function(){
+						vm.$emit('input', this.value)
+					})
+			},
+			/*watch : {
+				value : function(value){
+					$(this.$el).val(value).trigger('change');
+				},
+				options : function(options){
+					$(this.$el).select2({data : options})
+				}
+
+			}*/
+		});
+
+		new Vue({
+			el : '#el',
+			template : '#demo-template',
+			data : {
+				selected : 0,
+				options : [
+					{id : 1, text : 'Hello'},
+					{id : 2, text : 'World'}
+				]
+			}
+		})
+	</script>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>组件</title>
+<script src="../script/vue.js"></script>
+</script>
+</head>
+
+<body>
+<h4>编译作用域</h4>
+<h4>单个slot</h4>
+	<div id="app-1">
+	  <h1>我是父组件的标题</h1>
+	  <my-component>
+	    <p>这是一些初始内容</p>
+	    <p>这是更多的初始内容</p>
+	  </my-component>
+	</div>
+<h4>具名slot</h4>
+<div id="app-2">
+	<app-layout>
+	  <h1 slot="header">这里可能是一个页面标题</h1>
+	  <p>主要内容的一个段落。</p>
+	  <p>另一个主要段落。</p>
+	  <p slot="footer">这里有一些联系信息</p>
+	</app-layout>
+</div>
+<h4>作用域插槽</h4>
+<div id="app-3">
+	<div class="parent">
+	  <child>
+	    <template scope="props">
+	      <span>hello from parent</span>
+	      <span>{{ props.text }}</span>
+	    </template>
+	  </child>
+	</div>
+</div>
+<h5>作用域插槽更具代表性的用例是列表组件，允许组件自定义应该如何渲染列表每一项</h5>
+<div id="app-4">
+	<my-awesome-list>
+		<template scope="props" slot="item">
+			<li>{{props.text}}</li>
+		</template>
+	</my-awesome-list>
+</div>
+
+</body>
+<script>
+	Vue.component('my-component', {
+		template : '\
+		<div>\
+  		<h2>我是子组件的标题</h2>\
+  		<slot>\
+    	只有在没有要分发的内容时才会显示。\
+  		</slot>\
+		</div>\
+		'	
+	});
+	
+	var app1 = new Vue({
+		el : '#app-1'	
+	});
+
+	Vue.component('app-layout', {
+		template : '\
+		<div class="container">\
+  			<header>\
+    			<slot name="header"></slot>\
+  			</header>\
+  			<main>\
+    			<slot></slot>\
+  			</main>\
+  			<footer>\
+    			<slot name="footer"></slot>\
+  			</footer>\
+		</div>\
+		'
+	});
+
+	var app2 = new Vue({
+		el : '#app-2'	
+	});
+
+	Vue.component('child', {
+		template : '\
+			<div class="child">\
+  				<slot text="hello from child"></slot>\
+			</div>\
+		'
+	});
+
+	var app3 = new Vue({
+		el : '#app-3'	
+	});
+
+	Vue.component('my-awesome-list', {
+		template : '\
+			<ul>\
+				<slot name="item"\
+					v-for="item in items"\
+					v-bind:text="item.text">\
+				</slot>\
+			</ul>\
+		',
+		data : function(){
+			return {
+				items : [
+					{text : 'aaa'},
+					{text : 'bbb'},
+					{text : 'ccc'},
+					{text : 'ddd'}
+				]
+			}
+		}
+	});
+
+	var app4 = new Vue({
+		el : '#app-4'	
+	});
+</script>
+</html>

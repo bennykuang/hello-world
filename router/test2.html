@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>路由</title>
+<script src="../script/vue.js"></script>
+<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+<style>
+.act{color:red;}
+</style>
+</head>
+<body>
+<h4>动态路由配置</h4>
+<div id="app">
+	<h3>Hello App!</h3>
+	<p>
+		<router-link to="/user/foo" tag="li" active-class="act"><a>Go to Foo</a></router-link>
+		<router-link to="/user/bar" tag="li" active-class="act"><a>Go to Bar</a></router-link>
+	</p>
+	<router-view></router-view>
+</div>
+</body>
+<script>
+	const User = {
+		template : '<div>user : {{$route.params.id}}</div>',
+		watch : {
+			$route(to, from){
+				console.log(to, from);
+			}
+		}
+	};
+
+	const router = new VueRouter({
+		routes : [
+			{path : '/user/:id', component : User}
+		]
+	});
+	const app = new Vue({router}).$mount('#app');
+</script>
+</html>

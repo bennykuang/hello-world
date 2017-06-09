@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<script src="../script/vue.js"></script>
+</head>
+
+<body>
+	<h1>计算属性</h1>
+	<h2>基础例子</h2>
+	<div id="example">
+	  <p>Original message: "{{ message }}"</p>
+	  <p>Computed reversed message: "{{ reversedMessage }}"</p>
+	</div>
+	
+	<h2>计算缓存 vs Methods</h2>
+	<div id="example-2">
+	  <p>Original message: "{{ message }}"</p>
+	  <p>Computed reversed message: "{{ reversedMessage() }}"</p>
+	</div>
+	
+	<h2>computed属性 vs Watched</h2>
+	<div id="example-3">{{ fullName }}</div>
+	
+	<h2>计算setter</h2>
+	<div id="example-4">{{ fullName }}</div>
+	
+	<h2>观察Watcher</h2>
+	<div id="watch-example">
+		<p>
+			Ask a yes/no question:
+			<input v-model="question" />
+		</p>
+		<p>
+			{{answer}}
+		</p>
+	</div>
+	
+</body>
+<script>
+	var example1 = new Vue({
+		el : '#example',
+		data : {
+			message : 'hello'	
+		},
+		computed : {
+			reversedMessage : function(){
+				return this.message.split('').reverse().join('')
+			}	
+		}	
+	});
+	
+	var example2 = new Vue({
+		el : '#example-2',
+		data : {
+			message : 'hello'	
+		},
+		methods : {
+			reversedMessage : function(){
+				return this.message.split('').reverse().join('')	
+			}
+		}
+	});
+	
+	var example3 = new Vue({
+		el : '#example-3',
+		data : {
+			firstName : 'Foo',
+			lastName : 'Bar'
+		},
+		computed : {
+			fullName : function(){
+				return this.firstName + ' ' + this.lastName;	
+			}
+		}
+	});
+	
+	var example4 = new Vue({
+		el : '#example-4',
+		data : {
+			firstName : 'Foo',
+			lastName : 'Bar'	
+		},
+		computed : {
+			fullName : {
+				get : function(){
+					return this.firstName + ' ' + this.lastName;
+				},
+				set : function(newValue){debugger;
+					var names = newValue.split(' ');
+					this.firstName = names[0];
+					this.lastName = names[names.length - 1];
+				}	
+			}	
+		}
+	});
+	
+	var watchExample = new Vue({
+		el : '#watch-example',
+		data : {
+			question : '',
+			answer : 'I cannot give you an answer until you ask a question!'	
+		},
+		watch : {
+			question : function(){
+				this.answer = 'Waiting for you to stop typing...';
+			}	
+		}	
+	});
+</script>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>路由</title>
+<script src="../script/vue.js"></script>
+<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+<style>
+.act{color:red;}
+</style>
+</head>
+<body>
+<h4>嵌套路由</h4>
+<div id="app">
+	<h3>Hello App!</h3>
+	<p>
+		<router-link to="/user/foo" active-class="act">Go to Foo</router-link>
+		<router-link to="/user/foo/profile" active-class="act">Go to profile</router-link>
+		<router-link to="/user/foo/posts" active-class="act">Go to posts</router-link>
+	</p>
+	<router-view></router-view>
+</div>
+</body>
+<script>
+	const User = {
+		template : '<div>\
+			<h2>user</h2>\
+			<router-view></router-view>\
+		</div>'
+	};
+	const UserHome = {template : '<div>Home</div>'};
+	const UserProfile = {template : '<div>Profile</div>'};
+	const UserPosts = {template : '<div>Posts</div>'}
+
+	const router = new VueRouter({
+		routes : [
+			{path : '/user/:id', component : User, children : [
+				{path : '', component : UserHome},
+				{path : 'profile', component : UserProfile},
+				{path : 'posts', component : UserPosts}
+			]}
+		]
+	});
+	const app = new Vue({router}).$mount('#app');
+</script>
+</html>

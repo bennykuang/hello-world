@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>插件</title>
+<script src="../script/vue.js"></script>
+</head>
+<body>
+
+</body>
+<script>
+MyPlugin.install = function(Vue, options){
+	Vue.myGlobalMethod = function(){};
+
+	Vue.directive('my-directive', {
+		bind(el, binding, vnode, oldVnode){}
+	});
+
+	Vue.mixin({
+		created : function(){}
+	});
+
+	Vue.prototype.$myMethod = function(options){}
+}
+Vue.use(MyPlugin);
+</script>
+</html>

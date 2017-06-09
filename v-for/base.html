@@ -1,0 +1,101 @@
+<!DOCTYPE>
+<html>
+<head>
+<meta charset=utf-8" />
+<title>基本用法</title>
+<script src="../script/vue.js"></script>
+<style>
+	.ul{margin:0;padding:0;list-style:none;}
+	.ul li{width:200px;height:25px;line-height:25px; vertical-align:middle;}
+	.line{height:2px !important;background-color:#CCC;}
+</style>
+</head>
+
+<body>
+<h2>基本用法</h2>
+<div id="app-1">
+	<ol>
+		<li v-for="item in items">
+			{{item.text}}
+		</li>
+	</ol>
+</div>
+
+<p>v-for 还支持一个可选的第二个参数为当前项的索引</p>
+<div id="app-2">
+	<ol>
+		<li v-for="(item, index) of items">
+			{{parentMessage}} - {{index}} - {{item.message}}
+		</li>
+	</ol>
+</div>
+
+<h3>Template v-for</h3>
+<ul id="app-3">
+	<template v-for="item of items">
+		<li>{{item.message}}</li>
+		<li class="line"></li>
+	</template>
+</ul>
+
+<h2>对象迭代 v-for</h2>
+<ul id="app-4">
+	<li v-for="(value, key, index) of objects">{{index}} - {{key}} : {{value}}</li>
+</ul>
+
+<h2>整数迭代 v-for</h2>
+<div id="app-5"><span v-for="num of 10">{{num}} - </span></div>
+
+</body>
+<script>
+var app1 = new Vue({
+	el : '#app-1',
+	data : {
+		items : [
+			{text : 'Foo'},
+			{text : 'Bar'}	
+		]	
+	}	
+});
+
+var app2 = new Vue({
+	el : '#app-2',
+	data : {
+		parentMessage : 'Parent',
+		items : [
+			{message : 'Foo'},
+			{message : 'Bar'}
+		]
+	}
+});
+
+var app3 = new Vue({
+	el : '#app-3',
+	data : {
+		items : [
+			{message : 'Foo'},
+			{message : 'Bar'}
+		]
+	}
+});
+
+var app4 = new Vue({
+	el : '#app-4',
+	data : {
+		objects : {
+			FirstName : 'John',
+			LastName : 'Doe',
+			age : 30
+		}
+	}
+});
+
+var app5 = new Vue({
+	el : '#app-5',
+	data : {
+
+	}
+});	
+	
+</script>
+</html>

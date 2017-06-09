@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>基本用法</title>
+<script src="../script/vue.js"></script>
+<link rel="stylesheet" type="text/css" href="../css/animate.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.14.1/lodash.min.js"></script>
+<style>
+.list-item{transition:all 1s;display:inline-block;margin-right:5px;}
+.list-enter-active,.list-leave-active{
+	transition: all 1s
+}
+.list-enter,.list-leave-active{
+	opacity:0;
+	transform: translateY(30px);
+}
+.list-leave-active{
+	position:absolute;
+}
+</style>
+</head>
+
+<body>
+<h4>列表的进入和离开过渡</h4>
+<div id="list-demo">
+	<button @click="shuffle">Shuffle</button>
+	<button @click="add">Add</button>
+	<button @click="remove">Remove</button>
+	<transition-group name="list" tag="p">
+		<span v-for="item in items" :key="item" class="list-item">	{{item}}
+		</span>
+	</transition-group>
+</div>
+
+<h4>列表的渐进过渡</h4>
+<div id="staggered-list-demo">
+	<input v-model="query">
+	<transition-group 
+		name="staggered-fade"
+		tag="ul"
+		:css="false"
+		@before-enter="beforeEnter"
+		@enter="enter"
+		@leave="leave"
+	>
+		<li 
+			v-for="(item, index) in computedList"
+			:key="item.msg"
+			:data-index="index"
+		>
+			{{item.msg}}
+		</li>
+	</transition-group>
+</div>
+
+</body>
+<script>
+	var listDemo = new Vue({
+		el : '#list-demo',
+		data : {
+			items : [1,2,3,4,5,6,7,8,9],
+			nextNum : 10
+		},
+		methods : {
+			randomIndex : function(){
+				return Math.floor(Math.random() * this.items.length);
+			},
+			add : function(){
+				this.items.splice(this.randomIndex(), 0, this.nextNum++);
+			},
+			remove : function(){
+				this.items.splice(this.randomIndex(), 1);
+			},
+			shuffle : function(){
+				this.items = _.shuffle(this.items);
+			}
+		}
+	});
+
+	var staggered_list_demo = new Vue({
+		el : '#staggered-list-demo',
+		data : {
+			list : [
+				{ msg: 'Bruce Lee' },
+				{ msg: 'Jackie Chan' },
+				{ msg: 'Chuck Norris' },
+				{ msg: 'Jet Li' },
+				{ msg: 'Kung Fury' }
+			],
+			query : ''
+		},
+		computed : {
+			computedList : function(){
+				var vm = this;
+				return vm.list.filter(function(item){
+						return item.msg.toLowerCase().indexOf(vm.query.toLowerCase()) !== -1;
+				});
+			}
+		},
+		methods : {
+			beforeEnter : function(el){
+				el.style.opacity = 0;
+				el.style.height = 0;
+			},
+			enter : function(el, done){
+				var delay = el.dataset.index * 150;
+				setTimeout(function () {
+				Velocity(
+				el,
+				{ opacity: 1, height: '1.6em' },
+				{ complete: done }
+				)
+				}, delay);
+			},
+			leave : function(el, done){
+				var delay = el.dataset.index * 150;
+				setTimeout(function () {
+				Velocity(
+				el,
+				{ opacity: 0, height: 0 },
+				{ complete: done }
+				)
+				}, delay);
+
+			}
+		}
+	});
+	
+</script>
+</html>
